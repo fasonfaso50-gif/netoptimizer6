@@ -3,549 +3,642 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NetOptimizer Pro | Enterprise Edition</title>
+    <title>NetOptimizer Pro | Ultimate Mobile</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: '#3b82f6',
+                        darkBtn: '#18181b',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
         :root {
-            --accent: #3b82f6;
-            --bg: #0a0a0b;
-            --card-bg: #111113;
-            --border: #1f1f23;
-            --text-secondary: #71717a;
+            --bg-primary: #0a0a0b;
+            --bg-secondary: #111113;
+            --border-color: #1f1f23;
+            --text-main: #f4f4f5;
+            --text-dim: #71717a;
+            --icon-theme-color: #ffffff;
+        }
+
+        .light {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --border-color: #e2e8f0;
+            --text-main: #0f172a;
+            --text-dim: #64748b;
+            --icon-theme-color: #09090b;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: #f4f4f5;
-            letter-spacing: -0.01em;
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background-color: #000;
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             overflow: hidden;
+            transition: background-color 0.5s ease;
+        }
+
+        .phone-container {
+            width: 100%;
+            max-width: 420px;
+            height: 100%;
+            background-color: var(--bg-primary);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: background-color 0.5s ease;
         }
 
         .mono { font-family: 'JetBrains Mono', monospace; }
 
-        /* Кастомный чекбокс (Switch) */
-        .toggle-checkbox {
-            appearance: none;
-            width: 32px;
-            height: 18px;
-            background: #27272a;
+        .card-ultimate {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
             border-radius: 20px;
-            position: relative;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-        .toggle-checkbox:checked {
-            background: var(--accent);
-        }
-        .toggle-checkbox::before {
-            content: '';
-            position: absolute;
-            width: 14px;
-            height: 14px;
-            background: white;
-            border-radius: 50%;
-            top: 2px;
-            left: 2px;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .toggle-checkbox:checked::before {
-            transform: translateX(14px);
-        }
-
-        /* Стильные карточки */
-        .card-strict {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            transition: border-color 0.2s ease, transform 0.2s ease;
-        }
-        .card-strict:hover {
-            border-color: #3f3f46;
-        }
-
-        .sidebar-item {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
+            padding: 16px;
+            transition: all 0.3s ease;
             position: relative;
         }
-        .sidebar-item:hover i {
-            color: #f4f4f5;
-        }
-        .sidebar-item.active {
-            color: var(--accent);
-        }
-        .sidebar-item.active::after {
-            content: '';
-            position: absolute;
-            right: 0;
-            top: 25%;
-            height: 50%;
-            width: 3px;
-            background: var(--accent);
-            border-radius: 4px 0 0 4px;
+
+        .tab-bar {
+            height: 80px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: env(safe-area-inset-bottom);
+            z-index: 100;
         }
 
-        /* Консоль */
-        .console-box {
-            background: #000;
-            font-size: 10px;
-            line-height: 1.6;
-            color: #10b981;
-            border-radius: 4px;
+        .tab-item {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-dim);
+            transition: all 0.3s;
         }
+        .tab-item.active { color: var(--brand); }
 
-        .fade-in {
+        .content-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            scrollbar-width: none;
+        }
+        .content-scroll::-webkit-scrollbar { display: none; }
+
+        .tab-panel {
+            display: none;
             animation: fadeIn 0.3s ease-out;
         }
+        .tab-panel.active { display: block; }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.98); }
-            to { opacity: 1; transform: scale(1); }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .custom-scroll::-webkit-scrollbar {
-            width: 4px;
+        /* Анимация иконки темы */
+        .theme-icon-container {
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .custom-scroll::-webkit-scrollbar-track {
-            background: transparent;
+        .theme-icon-rotate {
+            transform: rotate(360deg);
         }
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background: #27272a;
-            border-radius: 10px;
+
+        #modal-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            align-items: flex-end;
+            transition: 0.3s;
         }
+        #modal-content {
+            width: 100%;
+            background: var(--bg-secondary);
+            border-top: 2px solid var(--border-color);
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            padding: 24px;
+            transform: translateY(100%);
+            transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        #modal-overlay.active { display: flex; }
+        #modal-overlay.active #modal-content { transform: translateY(0); }
+
+        .audit-item {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .audit-item:active { background: rgba(59, 130, 246, 0.1); }
+
+        .sub-menu { display: none; }
+        .sub-menu.active { display: block; animation: fadeIn 0.3s; }
     </style>
 </head>
-<body class="h-screen flex flex-col">
+<body class="dark">
 
-    <!-- Header -->
-    <header class="h-14 border-b border-[#1f1f23] flex items-center justify-between px-6 bg-[#0a0a0b] shrink-0 z-50">
-        <div class="flex items-center gap-4">
-            <div class="w-9 h-9 overflow-hidden rounded-lg border border-[#27272a] bg-[#111113] group shadow-xl">
-                <img src="https://i.pinimg.com/736x/1b/ac/96/1bac96cd70e67c3c67ffb25cd4f88da1.jpg" 
-                     alt="NetOptimizer Logo" 
-                     class="w-full h-full object-cover transition-transform group-hover:scale-110">
-            </div>
-            <div>
-                <h1 class="text-xs font-bold tracking-widest uppercase">NETOPTIMIZER <span class="text-blue-500">PRO</span></h1>
-                <p class="text-[9px] text-zinc-500 font-bold uppercase tracking-tighter">Enterprise Edition / v4.0.2</p>
-            </div>
-        </div>
-        <div class="flex items-center gap-6">
-            <div class="hidden md:flex gap-4 border-r border-[#1f1f23] pr-6">
-                <div class="text-right">
-                    <p class="text-[8px] text-zinc-500 uppercase font-bold">Traffic In</p>
-                    <p class="text-[10px] mono font-bold text-blue-400">12.4 GB</p>
-                </div>
-                <div class="text-right">
-                    <p class="text-[8px] text-zinc-500 uppercase font-bold">Traffic Out</p>
-                    <p class="text-[10px] mono font-bold text-emerald-400">4.1 GB</p>
-                </div>
-            </div>
+    <div class="phone-container shadow-2xl">
+        
+        <!-- Header -->
+        <header class="h-20 flex items-center justify-between px-6 shrink-0 z-50 bg-transparent">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full border border-[#1f1f23] flex items-center justify-center bg-[#111113] cursor-pointer hover:bg-[#18181b]">
-                    <i data-lucide="bell" class="w-4 h-4 text-zinc-400"></i>
+                <div class="w-10 h-10 rounded-full border-2 border-brand overflow-hidden shadow-lg shadow-brand/20">
+                    <img src="https://i.pinimg.com/736x/1b/ac/96/1bac96cd70e67c3c67ffb25cd4f88da1.jpg" alt="User" class="w-full h-full object-cover">
                 </div>
-                <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center cursor-pointer font-bold text-[10px]">JD</div>
+                <div class="flex flex-col">
+                    <h1 class="text-md font-extrabold tracking-tight flex items-center gap-1">
+                        <span class="text-brand">NET</span>OPTIMIZER
+                    </h1>
+                    <span id="status-text" data-t="status_active" class="text-[9px] font-bold uppercase tracking-widest text-emerald-500">
+                        Система Активна
+                    </span>
+                </div>
+            </div>
+            <button onclick="toggleTheme()" id="theme-btn" class="w-10 h-10 bg-zinc-800/20 light:bg-zinc-200/50 rounded-full flex items-center justify-center overflow-hidden">
+                <div id="theme-icon-wrapper" class="theme-icon-container">
+                    <i id="theme-icon" data-lucide="moon" class="w-5 h-5 text-white transition-colors duration-500"></i>
+                </div>
+            </button>
+        </header>
+
+        <main class="flex-1 relative overflow-hidden">
+            
+            <!-- Dashboard -->
+            <div id="panel-dashboard" class="tab-panel active content-scroll h-full">
+                <div class="space-y-6">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="card-ultimate border-l-4 border-l-brand">
+                            <p data-t="latency" class="text-[10px] font-bold text-zinc-500 uppercase">Задержка</p>
+                            <div class="flex items-baseline gap-1 mt-1">
+                                <span id="ping-val" class="text-3xl font-black mono tracking-tighter">24</span>
+                                <span class="text-xs font-bold text-zinc-400">ms</span>
+                            </div>
+                        </div>
+                        <div class="card-ultimate">
+                            <p data-t="load" class="text-[10px] font-bold text-zinc-500 uppercase">Нагрузка</p>
+                            <div class="flex items-baseline gap-1 mt-1">
+                                <span id="cpu-val" class="text-3xl font-black mono tracking-tighter text-emerald-500">12</span>
+                                <span class="text-xs font-bold text-zinc-400">%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-ultimate h-40"><canvas id="mainChart"></canvas></div>
+                    <button onclick="runUltimateOptimization(this)" class="w-full h-16 bg-brand text-white font-black uppercase text-xs rounded-2xl shadow-xl shadow-brand/20 flex items-center justify-center gap-3">
+                        <i data-lucide="cpu" class="w-5 h-5"></i> <span data-t="btn_optimize">Оптимизировать</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- VPN -->
+            <div id="panel-vpn" class="tab-panel content-scroll h-full">
+                <div class="space-y-6">
+                    <h2 data-t="vpn_nodes" class="text-2xl font-black">VPN Узлы</h2>
+                    <div class="card-ultimate p-8 flex flex-col items-center text-center space-y-6">
+                        <div class="w-20 h-20 bg-brand/10 rounded-full flex items-center justify-center"><i data-lucide="shield-check" class="w-10 h-10 text-brand"></i></div>
+                        <div>
+                            <p class="text-lg font-black">Germany, Frankfurt</p>
+                            <p class="text-[10px] mono text-brand mt-1">185.192.12.44</p>
+                        </div>
+                        <button data-t="change_server" class="w-full py-4 bg-darkBtn text-white rounded-xl text-xs font-bold uppercase tracking-widest border border-zinc-800">
+                            Сменить сервер
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AUDIT -->
+            <div id="panel-security" class="tab-panel content-scroll h-full">
+                <div class="space-y-6">
+                    <h2 data-t="audit_title" class="text-2xl font-black">Аудит</h2>
+                    <div id="audit-list" class="card-ultimate p-0 overflow-hidden divide-y divide-border-color">
+                        <!-- Динамическая генерация -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- MENU -->
+            <div id="panel-settings" class="tab-panel content-scroll h-full">
+                <div id="menu-main" class="sub-menu active space-y-6">
+                    <h2 data-t="menu_title" class="text-2xl font-black">Меню</h2>
+                    <div onclick="showSubMenu('profile')" class="card-ultimate flex items-center gap-4 p-4 cursor-pointer">
+                        <div class="w-12 h-12 rounded-full bg-brand/20 flex items-center justify-center"><i data-lucide="user" class="text-brand"></i></div>
+                        <div class="flex-1">
+                            <p class="font-bold">Admin Account</p>
+                            <p data-t="premium_member" class="text-[10px] text-zinc-500">Premium Member</p>
+                        </div>
+                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </div>
+
+                    <p data-t="device_cat" class="text-[10px] font-bold text-zinc-500 uppercase px-1">Устройство</p>
+                    <div class="card-ultimate p-0 overflow-hidden divide-y divide-border-color">
+                        <div onclick="showSubMenu('display')" class="p-4 flex items-center justify-between cursor-pointer">
+                            <div class="flex items-center gap-3"><i data-lucide="smartphone" class="w-4 h-4"></i><span data-t="screen" class="text-sm">Экран</span></div>
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-zinc-600"></i>
+                        </div>
+                        <div onclick="showSubMenu('battery')" class="p-4 flex items-center justify-between cursor-pointer">
+                            <div class="flex items-center gap-3"><i data-lucide="battery" class="w-4 h-4"></i><span data-t="battery" class="text-sm">Батарея</span></div>
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-zinc-600"></i>
+                        </div>
+                        <div onclick="showSubMenu('gpu')" class="p-4 flex items-center justify-between cursor-pointer">
+                            <div class="flex items-center gap-3"><i data-lucide="cpu" class="w-4 h-4"></i><span data-t="gpu_boost" class="text-sm">Разгон GPU</span></div>
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-zinc-600"></i>
+                        </div>
+                    </div>
+
+                    <p data-t="lang_title" class="text-[10px] font-bold text-zinc-500 uppercase px-1">Язык системы</p>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="setLanguage('ru')" class="card-ultimate p-2 text-center text-[10px] font-bold hover:border-brand transition-colors">РУССКИЙ</button>
+                        <button onclick="setLanguage('en')" class="card-ultimate p-2 text-center text-[10px] font-bold hover:border-brand transition-colors">ENGLISH</button>
+                        <button onclick="setLanguage('jp')" class="card-ultimate p-2 text-center text-[10px] font-bold hover:border-brand transition-colors">日本語</button>
+                    </div>
+
+                    <p data-t="configs_cat" class="text-[10px] font-bold text-zinc-500 uppercase px-1">Конфигурации</p>
+                    <div class="card-ultimate p-5 border-dashed border-brand/30 bg-brand/5 flex flex-col items-center gap-3">
+                        <i data-lucide="file-up" class="w-8 h-8 text-brand"></i>
+                        <p data-t="upload_config" class="text-xs text-center">Загрузите .json конфиг</p>
+                        <input type="file" id="config-upload" class="hidden" onchange="handleConfigUpload(this)">
+                        <button onclick="document.getElementById('config-upload').click()" data-t="btn_choose_file" class="px-6 py-2 bg-brand text-white rounded-full text-[10px] font-bold uppercase">Выбрать файл</button>
+                    </div>
+                </div>
+
+                <!-- Sub Menus -->
+                <div id="menu-profile" class="sub-menu space-y-6">
+                    <button onclick="showSubMenu('main')" class="flex items-center gap-2 text-brand text-xs font-bold uppercase mb-4"><i data-lucide="arrow-left" class="w-4 h-4"></i> <span data-t="back">Назад</span></button>
+                    <h2 data-t="profile" class="text-2xl font-black">Профиль</h2>
+                    <div class="card-ultimate space-y-4">
+                        <div class="flex justify-between border-b border-border-color pb-2"><span class="text-xs text-zinc-500">ID</span><span class="text-xs mono">#882910</span></div>
+                        <div class="flex justify-between border-b border-border-color pb-2"><span data-t="status" class="text-xs text-zinc-500">Статус</span><span class="text-xs text-emerald-500 font-bold uppercase">Pro</span></div>
+                        <div class="flex justify-between pb-2"><span data-t="registration" class="text-xs text-zinc-500">Регистрация</span><span class="text-xs">02.01.2025</span></div>
+                    </div>
+                </div>
+
+                <div id="menu-display" class="sub-menu space-y-6">
+                    <button onclick="showSubMenu('main')" class="flex items-center gap-2 text-brand text-xs font-bold uppercase mb-4"><i data-lucide="arrow-left" class="w-4 h-4"></i> <span data-t="back">Назад</span></button>
+                    <h2 data-t="screen_settings" class="text-2xl font-black">Настройки Экрана</h2>
+                    <div class="card-ultimate space-y-4">
+                        <div class="flex justify-between items-center"><span class="text-sm">120Hz</span><div class="w-10 h-5 bg-brand rounded-full"></div></div>
+                        <div class="flex justify-between items-center"><span data-t="hdr_force" class="text-sm">HDR Форсирование</span><div class="w-10 h-5 bg-zinc-800 rounded-full"></div></div>
+                    </div>
+                </div>
+
+                <div id="menu-battery" class="sub-menu space-y-6">
+                    <button onclick="showSubMenu('main')" class="flex items-center gap-2 text-brand text-xs font-bold uppercase mb-4"><i data-lucide="arrow-left" class="w-4 h-4"></i> <span data-t="back">Назад</span></button>
+                    <h2 data-t="battery" class="text-2xl font-black">Батарея</h2>
+                    <div class="card-ultimate space-y-4">
+                        <div class="flex justify-between items-center"><span class="text-sm">Power Saving</span><div class="w-10 h-5 bg-zinc-800 rounded-full"></div></div>
+                        <div class="flex justify-between items-center"><span class="text-sm">Fast Charging</span><div class="w-10 h-5 bg-brand rounded-full"></div></div>
+                    </div>
+                </div>
+
+                <div id="menu-gpu" class="sub-menu space-y-6">
+                    <button onclick="showSubMenu('main')" class="flex items-center gap-2 text-brand text-xs font-bold uppercase mb-4"><i data-lucide="arrow-left" class="w-4 h-4"></i> <span data-t="back">Назад</span></button>
+                    <h2 data-t="gpu_boost" class="text-2xl font-black">Разгон GPU</h2>
+                    <div class="card-ultimate p-6 text-center border-amber-500/30 bg-amber-500/5">
+                        <i data-lucide="flame" class="w-12 h-12 text-amber-500 mx-auto mb-4"></i>
+                        <p data-t="oc_core" class="text-sm font-bold">Оверклокинг Ядра</p>
+                        <p data-t="oc_warning" class="text-[10px] text-zinc-500 mt-2">Внимание: может привести к нагреву</p>
+                        <button data-t="btn_activate" class="mt-4 w-full py-2 bg-amber-500 text-black font-black rounded-lg text-xs uppercase">Активировать</button>
+                    </div>
+                </div>
+
+                <div class="pb-10"></div>
+            </div>
+        </main>
+
+        <!-- Modals -->
+        <div id="modal-overlay" onclick="closeModal(event)">
+            <div id="modal-content" onclick="event.stopPropagation()">
+                <div class="flex justify-between items-start mb-6">
+                    <div id="modal-header">
+                        <h3 id="modal-title" class="text-xl font-black">Details</h3>
+                        <p id="modal-subtitle" data-t="tech_report" class="text-[10px] text-zinc-500 uppercase tracking-widest mt-1">Технический отчет</p>
+                    </div>
+                    <button onclick="closeModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex items-center justify-center"><i data-lucide="x" class="w-4 h-4"></i></button>
+                </div>
+                <div class="space-y-6">
+                    <div class="card-ultimate bg-brand/5 border-brand/20">
+                        <p class="text-xs leading-relaxed text-zinc-300" id="modal-desc"></p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="card-ultimate p-3"><p data-t="modal_status" class="text-[9px] text-zinc-500 uppercase">Статус</p><p data-t="modal_optimal" class="text-xs font-bold text-emerald-500">ОПТИМАЛЬНО</p></div>
+                        <div class="card-ultimate p-3"><p data-t="modal_priority" class="text-[9px] text-zinc-500 uppercase">Приоритет</p><p data-t="modal_high" class="text-xs font-bold">ВЫСОКИЙ</p></div>
+                    </div>
+                    <button onclick="closeModal()" data-t="btn_apply_fix" class="w-full py-4 bg-brand text-white font-black rounded-2xl text-xs uppercase">Применить фикс</button>
+                </div>
             </div>
         </div>
-    </header>
 
-    <div class="flex flex-1 overflow-hidden">
-        <!-- Sidebar Navigation -->
-        <aside class="w-20 border-r border-[#1f1f23] flex flex-col items-center py-8 gap-8 bg-[#09090b]">
-            <button onclick="switchTab('dashboard')" class="sidebar-item p-3 active" data-tab="dashboard">
-                <i data-lucide="layout-dashboard" class="w-6 h-6"></i>
-            </button>
-            <button onclick="switchTab('network')" class="sidebar-item p-3 text-zinc-500" data-tab="network">
-                <i data-lucide="network" class="w-6 h-6"></i>
-            </button>
-            <button onclick="switchTab('firewall')" class="sidebar-item p-3 text-zinc-500" data-tab="firewall">
-                <i data-lucide="shield-check" class="w-6 h-6"></i>
-            </button>
-            <button onclick="switchTab('settings')" class="sidebar-item p-3 text-zinc-500" data-tab="settings">
-                <i data-lucide="sliders-horizontal" class="w-6 h-6"></i>
-            </button>
-            <div class="mt-auto flex flex-col items-center gap-6 mb-4">
-                <i data-lucide="help-circle" class="w-5 h-5 text-zinc-700 cursor-pointer hover:text-zinc-400"></i>
-                <i data-lucide="log-out" class="w-5 h-5 text-red-900/50 cursor-pointer hover:text-red-500"></i>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="flex-1 overflow-y-auto bg-[#0a0a0b] p-6 custom-scroll pb-24">
-            
-            <!-- Dashboard Tab -->
-            <div id="tab-dashboard" class="fade-in space-y-6">
-                <div class="flex justify-between items-end">
-                    <h2 class="text-lg font-bold">Панель управления</h2>
-                    <p class="text-[10px] text-zinc-500 mono uppercase tracking-widest">ID: 8829-PX-01</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div class="card-strict p-4 space-y-2">
-                        <p class="text-[10px] text-zinc-500 font-bold uppercase">Пинг</p>
-                        <div class="flex items-baseline gap-2">
-                            <span id="ping-val" class="text-2xl font-bold mono">24</span>
-                            <span class="text-xs text-zinc-600 font-bold">MS</span>
-                        </div>
-                        <div class="h-1 w-full bg-zinc-900 rounded-full overflow-hidden">
-                            <div class="h-full bg-blue-500" style="width: 24%"></div>
-                        </div>
-                    </div>
-                    <div class="card-strict p-4 space-y-2">
-                        <p class="text-[10px] text-zinc-500 font-bold uppercase">Потеря пакетов</p>
-                        <div class="flex items-baseline gap-2">
-                            <span class="text-2xl font-bold mono text-emerald-500">0.0</span>
-                            <span class="text-xs text-zinc-600 font-bold">%</span>
-                        </div>
-                        <div class="h-1 w-full bg-zinc-900 rounded-full overflow-hidden">
-                            <div class="h-full bg-emerald-500" style="width: 2%"></div>
-                        </div>
-                    </div>
-                    <div class="card-strict p-4 space-y-2">
-                        <p class="text-[10px] text-zinc-500 font-bold uppercase">Загрузка CPU</p>
-                        <div class="flex items-baseline gap-2">
-                            <span id="cpu-val" class="text-2xl font-bold mono">14</span>
-                            <span class="text-xs text-zinc-600 font-bold">%</span>
-                        </div>
-                        <div class="h-1 w-full bg-zinc-900 rounded-full overflow-hidden">
-                            <div id="cpu-bar" class="h-full bg-zinc-500 transition-all duration-500" style="width: 14%"></div>
-                        </div>
-                    </div>
-                    <div class="card-strict p-4 space-y-2">
-                        <p class="text-[10px] text-zinc-500 font-bold uppercase">Память</p>
-                        <div class="flex items-baseline gap-2">
-                            <span class="text-2xl font-bold mono">1.2</span>
-                            <span class="text-xs text-zinc-600 font-bold">GB</span>
-                        </div>
-                        <div class="h-1 w-full bg-zinc-900 rounded-full overflow-hidden">
-                            <div class="h-full bg-purple-500" style="width: 45%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="card-strict p-5 lg:col-span-2">
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-[11px] font-black uppercase text-zinc-400">Сетевая активность</h3>
-                            <select class="bg-transparent border-none text-[10px] font-bold text-blue-500 focus:ring-0 cursor-pointer">
-                                <option>Последние 30 минут</option>
-                                <option>Последние 24 часа</option>
-                            </select>
-                        </div>
-                        <div class="h-48">
-                            <canvas id="throughputChart"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="space-y-4">
-                        <div class="card-strict p-5">
-                            <h3 class="text-[11px] font-black uppercase text-zinc-400 mb-4">Быстрые настройки</h3>
-                            <div class="space-y-4">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs font-medium">DNS Фильтрация</span>
-                                    <input type="checkbox" checked class="toggle-checkbox">
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs font-medium">Сжатие трафика</span>
-                                    <input type="checkbox" class="toggle-checkbox">
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs font-medium">Авто-обновление</span>
-                                    <input type="checkbox" checked class="toggle-checkbox">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-strict p-5">
-                            <h3 class="text-[11px] font-black uppercase text-zinc-400 mb-4">Статус сервера</h3>
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded bg-emerald-500/10 flex items-center justify-center">
-                                    <i data-lucide="server" class="w-6 h-6 text-emerald-500"></i>
-                                </div>
-                                <div>
-                                    <p class="text-xs font-bold">MSK-NODE-01</p>
-                                    <p class="text-[10px] text-zinc-500">192.168.1.45 / Online</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Console -->
-                <div class="card-strict">
-                    <div class="px-4 py-2 border-b border-[#1f1f23] flex justify-between items-center bg-[#151518]">
-                        <span class="text-[10px] font-black uppercase text-zinc-500 tracking-tighter flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                            Live System Output
-                        </span>
-                        <div class="flex gap-4">
-                            <i data-lucide="terminal" class="w-3 h-3 text-zinc-600 cursor-pointer hover:text-white"></i>
-                            <i data-lucide="trash-2" class="w-3 h-3 text-zinc-600 cursor-pointer hover:text-red-400"></i>
-                        </div>
-                    </div>
-                    <div id="console" class="console-box h-32 p-4 overflow-y-auto mono custom-scroll">
-                        <span class="text-zinc-600">></span> Kernel module loaded successfully.<br>
-                        <span class="text-zinc-600">></span> Network interface eth0 configured...<br>
-                        <span class="text-zinc-600">></span> Ready for optimization deployment.
-                    </div>
-                </div>
-            </div>
-
-            <!-- Network Tab -->
-            <div id="tab-network" class="fade-in hidden space-y-6">
-                <h2 class="text-lg font-bold">Сетевые протоколы</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="card-strict p-6 space-y-6">
-                        <div class="space-y-4">
-                            <h3 class="text-xs font-bold uppercase text-blue-500">Оптимизация TCP</h3>
-                            <div class="space-y-2">
-                                <label class="text-[10px] text-zinc-500 font-bold uppercase">Алгоритм контроля перегрузки</label>
-                                <select class="w-full bg-[#0a0a0b] border border-[#27272a] rounded p-3 text-xs focus:ring-1 focus:ring-blue-500 outline-none">
-                                    <option>BBR v3 (Google)</option>
-                                    <option>CUBIC (Стандарт)</option>
-                                    <option>Hybla (Спутник)</option>
-                                </select>
-                            </div>
-                            <div class="flex items-center justify-between p-3 bg-zinc-900/50 rounded-lg">
-                                <div>
-                                    <p class="text-xs font-bold">Nagle Algorithm</p>
-                                    <p class="text-[9px] text-zinc-500">Отключите для минимальной задержки</p>
-                                </div>
-                                <input type="checkbox" checked class="toggle-checkbox">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-strict p-6 space-y-6">
-                        <h3 class="text-xs font-bold uppercase text-purple-500">Advanced UDP</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs">UDP Fast Path</span>
-                                <input type="checkbox" class="toggle-checkbox">
-                            </div>
-                            <div class="space-y-2">
-                                <p class="text-[10px] text-zinc-500 uppercase font-bold">MTU Discovery</p>
-                                <input type="range" class="w-full accent-blue-500 h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer" min="1280" max="1500" value="1460">
-                                <div class="flex justify-between text-[10px] mono text-zinc-600">
-                                    <span>1280</span>
-                                    <span>1460</span>
-                                    <span>1500</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Firewall Tab -->
-            <div id="tab-firewall" class="fade-in hidden space-y-6">
-                <h2 class="text-lg font-bold">Брандмауэр</h2>
-                <div class="card-strict p-0 overflow-hidden">
-                    <table class="w-full text-left text-xs">
-                        <thead class="bg-[#151518] text-zinc-500 font-bold uppercase border-b border-[#1f1f23]">
-                            <tr>
-                                <th class="p-4">Правило</th>
-                                <th class="p-4">Порт</th>
-                                <th class="p-4">Тип</th>
-                                <th class="p-4">Действие</th>
-                                <th class="p-4">Активно</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-[#1f1f23]">
-                            <tr class="hover:bg-zinc-900/30">
-                                <td class="p-4 font-medium">HTTP Server</td>
-                                <td class="p-4 mono">80, 443</td>
-                                <td class="p-4"><span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-500 text-[9px]">INBOUND</span></td>
-                                <td class="p-4 text-emerald-500 font-bold">ALLOW</td>
-                                <td class="p-4"><input type="checkbox" checked class="toggle-checkbox"></td>
-                            </tr>
-                            <tr class="hover:bg-zinc-900/30">
-                                <td class="p-4 font-medium">SSH Access</td>
-                                <td class="p-4 mono">22</td>
-                                <td class="p-4"><span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-500 text-[9px]">INBOUND</span></td>
-                                <td class="p-4 text-emerald-500 font-bold">ALLOW</td>
-                                <td class="p-4"><input type="checkbox" checked class="toggle-checkbox"></td>
-                            </tr>
-                            <tr class="hover:bg-zinc-900/30">
-                                <td class="p-4 font-medium">P2P Block</td>
-                                <td class="p-4 mono">6881-6889</td>
-                                <td class="p-4"><span class="px-2 py-0.5 rounded bg-orange-500/10 text-orange-500 text-[9px]">OUTBOUND</span></td>
-                                <td class="p-4 text-red-500 font-bold">DENY</td>
-                                <td class="p-4"><input type="checkbox" class="toggle-checkbox"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Settings Tab -->
-            <div id="tab-settings" class="fade-in hidden space-y-6">
-                <h2 class="text-lg font-bold">Настройки</h2>
-                <div class="card-strict p-6 max-w-2xl space-y-8">
-                    <div class="space-y-4">
-                        <h3 class="text-xs font-bold uppercase text-zinc-500">Интерфейс</h3>
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-sm font-medium">Темный режим</p>
-                                <p class="text-xs text-zinc-500">Автоматическая адаптация под систему</p>
-                            </div>
-                            <input type="checkbox" checked class="toggle-checkbox">
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-sm font-medium">Звуковые уведомления</p>
-                                <p class="text-xs text-zinc-500">Сигналы при критических событиях</p>
-                            </div>
-                            <input type="checkbox" class="toggle-checkbox">
-                        </div>
-                    </div>
-                    <div class="pt-6 border-t border-[#1f1f23] space-y-4">
-                        <h3 class="text-xs font-bold uppercase text-zinc-500">Профиль</h3>
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-full bg-zinc-800"></div>
-                            <div class="flex-1">
-                                <input type="text" value="Enterprise Admin" class="w-full bg-zinc-900 border border-zinc-800 rounded p-2 text-xs outline-none focus:border-blue-500">
-                            </div>
-                            <button class="px-4 py-2 bg-blue-600 rounded text-xs font-bold hover:bg-blue-700">Update</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </main>
+        <!-- Tab Bar -->
+        <nav class="tab-bar">
+            <button onclick="changeTab('dashboard', this)" class="tab-item active"><i data-lucide="home" class="w-6 h-6"></i><span data-t="tab_main" class="text-[9px] font-bold mt-1">ГЛАВНАЯ</span></button>
+            <button onclick="changeTab('vpn', this)" class="tab-item"><i data-lucide="shield" class="w-6 h-6"></i><span data-t="tab_vpn" class="text-[9px] font-bold mt-1">VPN</span></button>
+            <button onclick="changeTab('security', this)" class="tab-item"><i data-lucide="search" class="w-6 h-6"></i><span data-t="tab_audit" class="text-[9px] font-bold mt-1">АУДИТ</span></button>
+            <button onclick="changeTab('settings', this)" class="tab-item"><i data-lucide="menu" class="w-6 h-6"></i><span data-t="tab_menu" class="text-[9px] font-bold mt-1">МЕНЮ</span></button>
+        </nav>
     </div>
 
-    <!-- Optimization Bar -->
-    <footer class="fixed bottom-0 left-0 right-0 p-5 border-t border-[#1f1f23] bg-[#0a0a0b] z-50 flex justify-center">
-        <button id="opt-btn" onclick="runOptimization()" class="w-full max-w-4xl h-12 bg-zinc-100 text-black text-[11px] font-black uppercase tracking-[0.2em] rounded-lg flex items-center justify-center gap-3 hover:bg-white active:scale-[0.98] transition-all shadow-lg shadow-white/5">
-            <i data-lucide="zap" class="w-4 h-4 fill-black"></i>
-            Deploy Global Optimization
-        </button>
-    </footer>
-
     <script>
-        lucide.createIcons();
-
-        // Switch Tab functionality
-        function switchTab(target) {
-            const tabs = document.querySelectorAll('main > div');
-            tabs.forEach(el => el.classList.add('hidden'));
-            
-            const targetTab = document.getElementById(`tab-${target}`);
-            if (targetTab) targetTab.classList.remove('hidden');
-
-            const sidebarButtons = document.querySelectorAll('.sidebar-item');
-            sidebarButtons.forEach(btn => {
-                btn.classList.remove('active');
-                btn.classList.add('text-zinc-500');
-            });
-            
-            const activeBtn = document.querySelector(`[data-tab="${target}"]`);
-            if (activeBtn) {
-                activeBtn.classList.add('active');
-                activeBtn.classList.remove('text-zinc-500');
-            }
-        }
-
-        // Optimization Simulation
-        function runOptimization() {
-            const btn = document.getElementById('opt-btn');
-            const log = document.getElementById('console');
-            if (!btn || !log) return;
-            
-            btn.disabled = true;
-            btn.innerHTML = '<span class="animate-pulse">Analyzing System Environment...</span>';
-            
-            const steps = [
-                "Scan active interfaces... [OK]",
-                "Apply BBR congestion control algorithm...",
-                "Optimize socket buffer sizes (Rmem/Wmem)...",
-                "Inject low-latency kernel parameters...",
-                "Finalizing configuration sync...",
-                "DEPLOYMENT COMPLETE: System is now optimized."
-            ];
-
-            steps.forEach((step, i) => {
-                setTimeout(() => {
-                    const time = new Date().toLocaleTimeString('ru-RU', {hour12: false});
-                    log.innerHTML += `<span class="text-zinc-500">[${time}]</span> <span class="text-emerald-400">READY:</span> ${step}<br>`;
-                    log.scrollTop = log.scrollHeight;
-                }, i * 750);
-            });
-
-            setTimeout(() => {
-                btn.disabled = false;
-                btn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i> Optimization Active';
-                btn.classList.replace('bg-zinc-100', 'bg-emerald-600');
-                btn.classList.replace('text-black', 'text-white');
-                lucide.createIcons();
-            }, 5000);
-        }
-
-        // Charting
-        const ctx = document.getElementById('throughputChart').getContext('2d');
-        const chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: Array(25).fill(''),
-                datasets: [{
-                    label: 'Download',
-                    data: Array(25).fill(0).map(() => Math.random() * 60 + 20),
-                    borderColor: '#3b82f6',
-                    borderWidth: 2,
-                    pointRadius: 0,
-                    tension: 0.4,
-                    fill: true,
-                    backgroundColor: 'rgba(59, 130, 246, 0.05)'
-                }, {
-                    label: 'Upload',
-                    data: Array(25).fill(0).map(() => Math.random() * 30 + 10),
-                    borderColor: '#10b981',
-                    borderWidth: 2,
-                    pointRadius: 0,
-                    tension: 0.4,
-                    fill: false
-                }]
+        const translations = {
+            ru: {
+                status_active: "Система Активна",
+                latency: "Задержка",
+                load: "Нагрузка",
+                btn_optimize: "Оптимизировать",
+                vpn_nodes: "VPN Узлы",
+                change_server: "Сменить сервер",
+                audit_title: "Аудит",
+                menu_title: "Меню",
+                premium_member: "Premium Аккаунт",
+                device_cat: "Устройство",
+                screen: "Экран",
+                battery: "Батарея",
+                gpu_boost: "Разгон GPU",
+                lang_title: "Язык системы",
+                configs_cat: "Конфигурации",
+                upload_config: "Загрузите .json конфиг",
+                btn_choose_file: "Выбрать файл",
+                back: "Назад",
+                profile: "Профиль",
+                status: "Статус",
+                registration: "Регистрация",
+                screen_settings: "Настройки Экрана",
+                hdr_force: "HDR Форсирование",
+                oc_core: "Оверклокинг Ядра",
+                oc_warning: "Внимание: может привести к нагреву",
+                btn_activate: "Активировать",
+                tech_report: "Технический отчет",
+                modal_status: "Статус",
+                modal_optimal: "ОПТИМАЛЬНО",
+                modal_priority: "Приоритет",
+                modal_high: "ВЫСОКИЙ",
+                btn_apply_fix: "Применить фикс",
+                tab_main: "ГЛАВНАЯ",
+                tab_vpn: "VPN",
+                tab_audit: "АУДИТ",
+                tab_menu: "МЕНЮ",
+                audit_1: { t: "Анализ DNS-утечек", d: "Проверка безопасности текущих DNS-серверов. Рекомендуется использовать DoH." },
+                audit_2: { t: "Проверка MTU пакетов", d: "Размер кадра настроен под текущий канал связи." },
+                audit_3: { t: "TCP Congestion Control", d: "Выбран алгоритм BBR для максимальной пропускной способности." }
             },
-            options: {
-                maintainAspectRatio: false,
-                scales: { 
-                    y: { 
-                        display: true, 
-                        grid: { color: '#1f1f23' }, 
-                        ticks: { color: '#3f3f46', font: { size: 8, family: 'JetBrains Mono' } } 
-                    }, 
-                    x: { display: false } 
-                },
-                plugins: { legend: { display: false } },
-                animation: { duration: 0 }
+            en: {
+                status_active: "System Active",
+                latency: "Latency",
+                load: "Load",
+                btn_optimize: "Optimize",
+                vpn_nodes: "VPN Nodes",
+                change_server: "Change Server",
+                audit_title: "Audit",
+                menu_title: "Menu",
+                premium_member: "Premium Member",
+                device_cat: "Device",
+                screen: "Screen",
+                battery: "Battery",
+                gpu_boost: "GPU Boost",
+                lang_title: "System Language",
+                configs_cat: "Configurations",
+                upload_config: "Upload .json config",
+                btn_choose_file: "Choose File",
+                back: "Back",
+                profile: "Profile",
+                status: "Status",
+                registration: "Registration",
+                screen_settings: "Screen Settings",
+                hdr_force: "HDR Forcing",
+                oc_core: "Core Overclocking",
+                oc_warning: "Warning: may lead to overheating",
+                btn_activate: "Activate",
+                tech_report: "Technical Report",
+                modal_status: "Status",
+                modal_optimal: "OPTIMAL",
+                modal_priority: "Priority",
+                modal_high: "HIGH",
+                btn_apply_fix: "Apply Fix",
+                tab_main: "HOME",
+                tab_vpn: "VPN",
+                tab_audit: "AUDIT",
+                tab_menu: "MENU",
+                audit_1: { t: "DNS Leak Analysis", d: "Security check of current DNS servers. DoH recommended." },
+                audit_2: { t: "MTU Packet Check", d: "Frame size adjusted for current channel." },
+                audit_3: { t: "TCP Congestion Control", d: "BBR algorithm selected for max throughput." }
+            },
+            jp: {
+                status_active: "システムアクティブ",
+                latency: "レイテンシ",
+                load: "負荷",
+                btn_optimize: "最適化する",
+                vpn_nodes: "VPNノード",
+                change_server: "サーバー変更",
+                audit_title: "監査",
+                menu_title: "メニュー",
+                premium_member: "プレミアム会員",
+                device_cat: "デバイス",
+                screen: "画面",
+                battery: "バッテリー",
+                gpu_boost: "GPUブースト",
+                lang_title: "システム言語",
+                configs_cat: "構成",
+                upload_config: ".jsonファイルをアップロード",
+                btn_choose_file: "ファイルを選択",
+                back: "戻る",
+                profile: "プロフィール",
+                status: "ステータс",
+                registration: "登録日",
+                screen_settings: "画面設定",
+                hdr_force: "HDR強制",
+                oc_core: "コア・オーバークロック",
+                oc_warning: "警告：発熱の恐れがあります",
+                btn_activate: "有効にする",
+                tech_report: "テクニカルレポート",
+                modal_status: "ステータス",
+                modal_optimal: "最適",
+                modal_priority: "優先度",
+                modal_high: "高い",
+                btn_apply_fix: "修正を適用",
+                tab_main: "ホーム",
+                tab_vpn: "VPN",
+                tab_audit: "監査",
+                tab_menu: "メニュー",
+                audit_1: { t: "DNSリーク分析", d: "現在のDNSサーバーのセキュリティチェック。DoH推奨。" },
+                audit_2: { t: "MTUパケットチェック", d: "フレームサイズを現在の回線に合わせて調整。" },
+                audit_3: { t: "TCP輻輳制御", d: "最大スループットのためにBBRを選択。" }
             }
-        });
+        };
 
-        // Real-time Updates
-        setInterval(() => {
-            // Ping
-            const pingEl = document.getElementById('ping-val');
-            const newPing = 20 + Math.floor(Math.random() * 10);
-            if (pingEl) pingEl.innerText = newPing;
+        let currentLang = 'ru';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            updateUI();
+            renderAudit();
+        }
+
+        function updateUI() {
+            const t = translations[currentLang];
+            document.querySelectorAll('[data-t]').forEach(el => {
+                const key = el.getAttribute('data-t');
+                if (t[key]) el.innerText = t[key];
+            });
+        }
+
+        function renderAudit() {
+            const auditList = document.getElementById('audit-list');
+            if (!auditList) return;
+            auditList.innerHTML = '';
+            const t = translations[currentLang];
             
-            // CPU
-            const cpuEl = document.getElementById('cpu-val');
-            const cpuBar = document.getElementById('cpu-bar');
-            const newCpu = 10 + Math.floor(Math.random() * 15);
-            if (cpuEl) cpuEl.innerText = newCpu;
-            if (cpuBar) cpuBar.style.width = newCpu + '%';
+            for(let i=1; i<=30; i++) {
+                const itemData = t[`audit_${i}`] || { t: (currentLang === 'ru' ? `Проверка ${i}` : `Check ${i}`), d: "Scanning..." };
+                const div = document.createElement('div');
+                div.className = 'audit-item flex items-center justify-between p-4';
+                div.innerHTML = `<span class="text-xs">${itemData.t}</span><i data-lucide="chevron-right" class="w-3 h-3 text-zinc-600"></i>`;
+                div.onclick = () => openModal({ title: itemData.t, desc: itemData.d });
+                auditList.appendChild(div);
+            }
+            lucide.createIcons();
+        }
 
-            // Chart update
-            chart.data.datasets[0].data.push(Math.random() * 60 + 20);
-            chart.data.datasets[1].data.push(Math.random() * 30 + 10);
-            chart.data.datasets[0].data.shift();
-            chart.data.datasets[1].data.shift();
-            chart.update('none');
-        }, 1200);
+        function openModal(item) {
+            const overlay = document.getElementById('modal-overlay');
+            if (!overlay) return;
+            document.getElementById('modal-title').innerText = item.title;
+            document.getElementById('modal-desc').innerText = item.desc;
+            overlay.classList.add('active');
+        }
 
+        function closeModal() {
+            const overlay = document.getElementById('modal-overlay');
+            if (overlay) overlay.classList.remove('active');
+        }
+
+        function showSubMenu(menuId) {
+            const menus = document.querySelectorAll('.sub-menu');
+            const target = document.getElementById(`menu-${menuId}`);
+            if (!target) return;
+            menus.forEach(m => m.classList.remove('active'));
+            target.classList.add('active');
+        }
+
+        function handleConfigUpload(input) {
+            if (input.files && input.files[0]) {
+                const status = document.getElementById('status-text');
+                const oldText = status.innerText;
+                status.innerText = "IMPORTING...";
+                setTimeout(() => {
+                    status.innerText = oldText;
+                    alert(currentLang === 'jp' ? "設定が読み込まれました" : "Config loaded!");
+                }, 1500);
+            }
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            const wrapper = document.getElementById('theme-icon-wrapper');
+            
+            // Запуск анимации вращения
+            wrapper.classList.add('theme-icon-rotate');
+            setTimeout(() => wrapper.classList.remove('theme-icon-rotate'), 500);
+
+            if (body.classList.contains('dark')) {
+                body.classList.replace('dark', 'light');
+                icon.setAttribute('data-lucide', 'sun');
+                icon.classList.replace('text-white', 'text-zinc-950');
+            } else {
+                body.classList.replace('light', 'dark');
+                icon.setAttribute('data-lucide', 'moon');
+                icon.classList.replace('text-zinc-950', 'text-white');
+            }
+            lucide.createIcons();
+        }
+
+        function changeTab(panelId, btn) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-item').forEach(b => b.classList.remove('active'));
+            const targetPanel = document.getElementById(`panel-${panelId}`);
+            if (targetPanel) targetPanel.classList.add('active');
+            if (btn) btn.classList.add('active');
+            if(panelId === 'settings') showSubMenu('main');
+        }
+
+        let mainChart;
+        function initChart() {
+            const canvas = document.getElementById('mainChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            mainChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array(20).fill(''),
+                    datasets: [{
+                        data: Array(20).fill(0).map(() => Math.random() * 50 + 20),
+                        borderColor: '#3b82f6',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        tension: 0.4,
+                        fill: true,
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: { y: { display: false }, x: { display: false } },
+                    plugins: { legend: { display: false } },
+                    animation: { duration: 0 }
+                }
+            });
+        }
+
+        function runUltimateOptimization(btn) {
+            const original = btn.innerHTML;
+            btn.disabled = true;
+            let p = 0;
+            const t = setInterval(() => {
+                p += 10;
+                btn.innerText = `... ${p}%`;
+                if(p>=100) {
+                    clearInterval(t);
+                    btn.innerText = currentLang === 'jp' ? "完了" : "DONE";
+                    setTimeout(() => { btn.innerHTML = original; btn.disabled = false; }, 2000);
+                }
+            }, 100);
+        }
+
+        setInterval(() => {
+            if(mainChart) {
+                mainChart.data.datasets[0].data.push(Math.random() * 40 + 30);
+                mainChart.data.datasets[0].data.shift();
+                mainChart.update('none');
+            }
+        }, 1000);
+
+        window.onload = () => {
+            initChart();
+            renderAudit();
+            updateUI();
+            lucide.createIcons();
+        };
     </script>
 </body>
 </html>
