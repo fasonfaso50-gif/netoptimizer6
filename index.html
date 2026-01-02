@@ -2,8 +2,8 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NetOptimizer Pro | Ultra</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NetOptimizer | Ultra Max Mobile</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -11,534 +11,408 @@
     <style>
         :root {
             --accent: #6366f1;
-            --panel-bg: #0f1115;
-            --card-bg: #16191f;
-            --border-color: rgba(255, 255, 255, 0.08);
-            --success: #10b981;
+            --bg: #030303;
+            --card-bg: #0c0c0e;
+            --border: rgba(255, 255, 255, 0.05);
         }
-        
+
         body {
             font-family: 'Inter', sans-serif;
-            margin: 0;
-            overflow: hidden;
-            height: 100vh;
-            color: #e4e4e7;
-            background: #000 url('https://i.pinimg.com/736x/93/c8/40/93c840ae8bb9eb492cb21d5dd1abbb36.jpg') no-repeat center center;
-            background-size: contain;
+            background-color: var(--bg);
+            color: #ffffff;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
-        
-        .app-container {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.9);
-            transform-origin: center;
-            transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
-            display: flex;
+        .custom-scroll::-webkit-scrollbar { display: none; }
+
+        .glass-nav {
+            background: rgba(5, 5, 5, 0.85);
+            backdrop-filter: blur(25px);
+            border-top: 1px solid var(--border);
         }
 
-        /* Состояние свернутого приложения */
-        .collapsed {
-            width: 80px !important;
-            height: 80px !important;
-            border-radius: 50% !important;
-            padding: 0 !important;
-            transform: scale(0.85);
-            border-color: var(--accent);
-            box-shadow: 0 0 40px rgba(99, 102, 241, 0.5);
-            cursor: pointer;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .collapsed aside, .collapsed main {
-            display: none !important;
-        }
-
-        .logo-container {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 2px solid var(--accent);
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #000;
-            transition: all 0.4s ease;
-            position: relative;
-        }
-
-        .collapsed .logo-container {
-            width: 64px;
-            height: 64px;
-            border-width: 3px;
-        }
-
-        .logo-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        @keyframes logo-pulse {
-            0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
-            70% { box-shadow: 0 0 0 20px rgba(99, 102, 241, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
-        }
-
-        .collapsed { animation: logo-pulse 2s infinite; }
-
-        .solid-panel {
+        .setting-card {
             background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            transition: transform 0.2s ease, border-color 0.2s ease;
-        }
-        
-        .solid-panel:hover {
-            border-color: rgba(99, 102, 241, 0.3);
-        }
-
-        .nav-btn {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .nav-btn.active {
-            background: rgba(99, 102, 241, 0.1);
-            color: white;
-            border-left: 3px solid var(--accent);
-        }
-
-        .drag-handle { cursor: grab; }
-        .drag-handle:active { cursor: grabbing; }
-
-        /* Switch */
-        .switch {
-            width: 36px; height: 18px;
-            background: #2d3139;
+            border: 1px solid var(--border);
             border-radius: 20px;
+            transition: transform 0.2s ease;
+        }
+
+        .setting-card:active {
+            transform: scale(0.98);
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
+            box-shadow: 0 8px 25px -5px rgba(99, 102, 241, 0.4);
+        }
+
+        .view-transition {
+            animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .switch-ui {
+            width: 42px; height: 22px;
+            background: #1f1f23;
+            border-radius: 50px;
             position: relative;
             cursor: pointer;
             transition: 0.3s;
         }
-        .switch.active { background: var(--accent); }
-        .switch::after {
+
+        .switch-ui.active { background: var(--accent); }
+        .switch-ui::after {
             content: '';
             position: absolute;
             top: 2px; left: 2px;
-            width: 14px; height: 14px;
-            background: white;
+            width: 18px; height: 18px;
+            background: #fff;
             border-radius: 50%;
             transition: 0.3s;
         }
-        .switch.active::after { left: 20px; }
+        .switch-ui.active::after { left: 22px; }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        input[type="range"] {
+            -webkit-appearance: none;
+            background: #1a1a1e;
+            height: 6px;
+            border-radius: 5px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px; height: 18px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .badge-pro {
+            background: linear-gradient(90deg, #f59e0b, #ef4444);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
     </style>
 </head>
-<body>
+<body class="custom-scroll">
 
-    <div id="app-window" 
-         class="app-container fixed w-[1000px] h-[650px] rounded-[32px] z-50 overflow-hidden" 
-         style="left: calc(50% - 500px); top: calc(50% - 325px);"
-         ondblclick="handleDblClick(event)">
-        
-        <!-- Sidebar -->
-        <aside class="w-64 border-r border-white/5 bg-[#0a0c10] flex flex-col">
-            <div class="p-8 flex items-center gap-4 border-b border-white/5 cursor-pointer hover:bg-white/5 transition-all" onclick="toggleCollapse()">
-                <div class="logo-container shadow-[0_0_15px_rgba(99,102,241,0.3)]">
-                    <img src="https://i.pinimg.com/736x/1b/ac/96/1bac96cd70e67c3c67ffb25cd4f88da1.jpg" alt="Logo">
+    <!-- Top Bar -->
+    <header class="fixed top-0 left-0 right-0 z-50 px-6 pt-6 pb-3 bg-black/80 backdrop-blur-md border-b border-white/5">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center p-[2px]">
+                    <div class="w-full h-full rounded-full bg-black flex items-center justify-center">
+                        <i data-lucide="zap" class="w-4 h-4 text-indigo-400 fill-indigo-400"></i>
+                    </div>
                 </div>
                 <div class="flex flex-col">
-                    <span class="text-[11px] font-black uppercase tracking-[0.2em] leading-tight text-white">NetOpt <span class="text-indigo-400">Pro</span></span>
-                    <span class="text-[8px] text-zinc-500 font-bold uppercase tracking-widest">Ultra Engine</span>
+                    <span class="text-[10px] font-black uppercase tracking-[0.2em]">NetOpt <span class="badge-pro">Ultra</span></span>
+                    <span id="system-status" class="text-[8px] text-emerald-500 font-bold uppercase tracking-wider">Система: Оптимизирована</span>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <div class="px-2 py-1 rounded-md bg-white/5 border border-white/10 flex items-center gap-1.5">
+                    <span class="w-1 h-1 rounded-full bg-indigo-500 animate-pulse"></span>
+                    <span id="top-ping" class="text-[9px] font-mono font-bold">24ms</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main View Container -->
+    <main class="pt-24 pb-40 px-5 space-y-6">
+        
+        <!-- Tab: Dashboard -->
+        <div id="view-home" class="view-transition space-y-6">
+            <div class="setting-card p-6 relative overflow-hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest">Анализ сети</h3>
+                    <i data-lucide="activity" class="w-4 h-4 text-zinc-600"></i>
+                </div>
+                <div class="h-28 -mx-2">
+                    <canvas id="mainChart"></canvas>
+                </div>
+                <div class="grid grid-cols-3 gap-2 mt-6">
+                    <div class="text-center p-3 bg-white/5 rounded-2xl">
+                        <div class="text-[8px] text-zinc-500 uppercase font-black mb-1">Jitter</div>
+                        <div class="text-sm font-mono font-bold">0.8ms</div>
+                    </div>
+                    <div class="text-center p-3 bg-white/5 rounded-2xl">
+                        <div class="text-[8px] text-zinc-500 uppercase font-black mb-1">Loss</div>
+                        <div class="text-sm font-mono font-bold text-emerald-500">0.0%</div>
+                    </div>
+                    <div class="text-center p-3 bg-white/5 rounded-2xl">
+                        <div class="text-[8px] text-zinc-500 uppercase font-black mb-1">Burst</div>
+                        <div class="text-sm font-mono font-bold">Off</div>
+                    </div>
                 </div>
             </div>
 
-            <nav class="flex-1 p-4 space-y-2 mt-4">
-                <div class="text-[9px] font-bold text-zinc-600 uppercase tracking-widest mb-4 px-4">Основные</div>
-                
-                <button onclick="switchTab('main')" id="btn-main" class="nav-btn active w-full px-5 py-3 rounded-2xl flex items-center gap-4 transition-all text-zinc-400">
-                    <i data-lucide="layout-grid" class="w-4 h-4"></i>
-                    <span class="text-[10px] font-bold uppercase tracking-widest">Дашборд</span>
-                </button>
-                
-                <div class="text-[9px] font-bold text-zinc-600 uppercase tracking-widest mt-8 mb-4 px-4">Контроль</div>
-                
-                <button onclick="switchTab('fps')" id="btn-fps" class="nav-btn w-full px-5 py-3 rounded-2xl flex items-center gap-4 transition-all text-zinc-400">
-                    <i data-lucide="monitor" class="w-4 h-4"></i>
-                    <span class="text-[10px] font-bold uppercase tracking-widest">FPS & Оверлей</span>
-                </button>
-                
-                <button onclick="switchTab('ping')" id="btn-ping" class="nav-btn w-full px-5 py-3 rounded-2xl flex items-center gap-4 transition-all text-zinc-400">
-                    <i data-lucide="activity" class="w-4 h-4"></i>
-                    <span class="text-[10px] font-bold uppercase tracking-widest">Ping & Сеть</span>
-                </button>
-
-                <div class="text-[9px] font-bold text-zinc-600 uppercase tracking-widest mt-8 mb-4 px-4">Настройки</div>
-                
-                <button onclick="switchTab('appearance')" id="btn-appearance" class="nav-btn w-full px-5 py-3 rounded-2xl flex items-center gap-4 transition-all text-zinc-400">
-                    <i data-lucide="palette" class="w-4 h-4"></i>
-                    <span class="text-[10px] font-bold uppercase tracking-widest">Интерфейс</span>
-                </button>
-                
-                <button onclick="switchTab('general')" id="btn-general" class="nav-btn w-full px-5 py-3 rounded-2xl flex items-center gap-4 transition-all text-zinc-400">
-                    <i data-lucide="settings" class="w-4 h-4"></i>
-                    <span class="text-[10px] font-bold uppercase tracking-widest">Параметры</span>
-                </button>
-            </nav>
-
-            <div class="p-6">
-                <button id="opt-btn" onclick="startOptimization()" class="w-full py-4 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] font-black uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3 shadow-xl shadow-indigo-600/20 active:scale-95">
-                    <i data-lucide="zap" class="w-4 h-4"></i>
-                    Оптимизация
-                </button>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="setting-card p-4">
+                    <div class="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center mb-3">
+                        <i data-lucide="shield-check" class="w-4 h-4 text-indigo-400"></i>
+                    </div>
+                    <div class="text-[9px] text-zinc-500 uppercase font-black">Защита IP</div>
+                    <div class="text-xs font-bold mt-1">Включена</div>
+                </div>
+                <div class="setting-card p-4">
+                    <div class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center mb-3">
+                        <i data-lucide="server" class="w-4 h-4 text-purple-400"></i>
+                    </div>
+                    <div class="text-[9px] text-zinc-500 uppercase font-black">Регион</div>
+                    <div class="text-xs font-bold mt-1">Авто (EU)</div>
+                </div>
             </div>
-        </aside>
+        </div>
 
-        <!-- Main Content -->
-        <main class="flex-1 flex flex-col min-w-0">
-            <header class="h-20 border-b border-white/5 flex items-center justify-between px-10 bg-[#0f1115]">
-                <div class="flex items-center gap-10 drag-handle flex-1 h-full" id="header-drag">
-                    <div id="page-title" class="text-[12px] font-extrabold uppercase tracking-[0.4em] text-white">Дашборд</div>
-                    <div class="flex items-center gap-3 px-4 py-1.5 bg-emerald-500/5 border border-emerald-500/10 rounded-full">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span class="text-[9px] font-mono font-bold text-emerald-500 uppercase">Engine Status: Ultra</span>
+        <!-- Tab: Network Settings -->
+        <div id="view-network" class="view-transition hidden space-y-4">
+            <h2 class="text-sm font-black uppercase tracking-widest text-indigo-400 px-1">Сетевой движок</h2>
+            
+            <div class="setting-card p-5 flex flex-col gap-5">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <div class="text-sm font-bold">Алгоритм TCP</div>
+                        <div class="text-[10px] text-zinc-500">Управление перегрузкой</div>
                     </div>
+                    <select class="bg-black/50 border border-white/10 rounded-lg text-[10px] p-1.5 focus:outline-none">
+                        <option>BBR v3 (Fastest)</option>
+                        <option>CUBIC (Standard)</option>
+                        <option>Adaptive</option>
+                    </select>
                 </div>
-                <div class="flex items-center gap-4">
-                    <button onclick="toggleCollapse()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 text-zinc-500 hover:text-white transition-all"><i data-lucide="minimize-2" class="w-4 h-4"></i></button>
-                    <button class="w-10 h-10 flex items-center justify-center rounded-xl bg-rose-500/5 text-rose-500 hover:bg-rose-500 transition-all hover:text-white"><i data-lucide="power" class="w-4 h-4"></i></button>
-                </div>
-            </header>
 
-            <div class="flex-1 p-10 overflow-y-auto bg-[#0f1115]">
+                <div class="flex justify-between items-center border-t border-white/5 pt-4">
+                    <div>
+                        <div class="text-sm font-bold">DNS-over-HTTPS</div>
+                        <div class="text-[10px] text-zinc-500">Шифрование DNS запросов</div>
+                    </div>
+                    <div class="switch-ui active" onclick="this.classList.toggle('active')"></div>
+                </div>
+
+                <div class="flex justify-between items-center border-t border-white/5 pt-4">
+                    <div>
+                        <div class="text-sm font-bold">Nagle Algorithm</div>
+                        <div class="text-[10px] text-zinc-500">Отключение задержки TCP</div>
+                    </div>
+                    <div class="switch-ui active" onclick="this.classList.toggle('active')"></div>
+                </div>
+
+                <div class="space-y-3 border-t border-white/5 pt-4">
+                    <div class="flex justify-between text-[11px]">
+                        <span class="font-bold">MTU Размер</span>
+                        <span class="text-indigo-400 font-mono">1500</span>
+                    </div>
+                    <input type="range" class="w-full" min="576" max="1500" value="1500">
+                </div>
+            </div>
+
+            <div class="setting-card p-5 space-y-4">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="wind" class="w-4 h-4 text-sky-400"></i>
+                        <span class="text-sm font-bold">Smart Packet Tagging</span>
+                    </div>
+                    <div class="switch-ui" onclick="this.classList.toggle('active')"></div>
+                </div>
+                <div class="flex justify-between items-center border-t border-white/5 pt-4">
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="refresh-ccw" class="w-4 h-4 text-emerald-400"></i>
+                        <span class="text-sm font-bold">Auto-Flush DNS</span>
+                    </div>
+                    <div class="switch-ui active" onclick="this.classList.toggle('active')"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Game Mode -->
+        <div id="view-game" class="view-transition hidden space-y-4">
+            <h2 class="text-sm font-black uppercase tracking-widest text-rose-400 px-1">Режим Игры</h2>
+
+            <div class="setting-card p-5 space-y-5">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <div class="text-sm font-bold">Приоритет CPU</div>
+                        <div class="text-[10px] text-zinc-500">Для игрового процесса</div>
+                    </div>
+                    <div class="switch-ui active" onclick="this.classList.toggle('active')"></div>
+                </div>
+                <div class="flex justify-between items-center border-t border-white/5 pt-4">
+                    <div>
+                        <div class="text-sm font-bold">Очистка памяти</div>
+                        <div class="text-[10px] text-zinc-500">Каждые 15 минут</div>
+                    </div>
+                    <div class="switch-ui" onclick="this.classList.toggle('active')"></div>
+                </div>
+                <div class="flex justify-between items-center border-t border-white/5 pt-4">
+                    <div>
+                        <div class="text-sm font-bold">Блокировка Windows Update</div>
+                        <div class="text-[10px] text-zinc-500">Во время игры</div>
+                    </div>
+                    <div class="switch-ui active" onclick="this.classList.toggle('active')"></div>
+                </div>
+            </div>
+
+            <div class="setting-card p-5">
+                <div class="text-sm font-bold mb-4">Оптимизация портов</div>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-2 py-1 bg-white/5 rounded-md text-[9px] font-mono border border-white/10">Steam (UDP)</span>
+                    <span class="px-2 py-1 bg-white/5 rounded-md text-[9px] font-mono border border-white/10">Epic (TCP)</span>
+                    <span class="px-2 py-1 bg-white/5 rounded-md text-[9px] font-mono border border-white/10">Battle.net</span>
+                    <span class="px-2 py-1 bg-white/5 rounded-md text-[9px] font-mono border border-white/10">Valorant</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Visuals -->
+        <div id="view-visual" class="view-transition hidden space-y-4">
+            <h2 class="text-sm font-black uppercase tracking-widest text-purple-400 px-1">Интерфейс</h2>
+
+            <div class="setting-card p-5 space-y-6">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm font-bold">Игровой Оверлей</span>
+                    <div class="switch-ui active" onclick="this.classList.toggle('active')"></div>
+                </div>
                 
-                <!-- Dashboard View -->
-                <div id="view-main" class="view space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
-                    <div class="grid grid-cols-12 gap-6">
-                        <!-- Main Stats Card -->
-                        <div class="col-span-8 solid-panel rounded-[32px] p-8 relative overflow-hidden h-72">
-                            <div class="flex justify-between items-start mb-6">
-                                <div>
-                                    <div class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">Задержка в реальном времени</div>
-                                    <div class="flex items-baseline gap-2">
-                                        <div class="text-6xl font-mono font-black text-white tracking-tighter" id="ping-val">24</div>
-                                        <div class="text-lg font-bold text-indigo-400 uppercase">ms</div>
-                                    </div>
-                                </div>
-                                <div class="flex flex-col items-end">
-                                    <div class="text-[10px] font-bold text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded-full uppercase mb-2">Стабильно</div>
-                                    <div class="text-[9px] text-zinc-500">Обновление: 500мс</div>
-                                </div>
-                            </div>
-                            <div class="absolute bottom-0 left-0 right-0 h-32 px-2">
-                                <canvas id="pingChart"></canvas>
-                            </div>
-                        </div>
-
-                        <!-- Side Stats -->
-                        <div class="col-span-4 space-y-6">
-                            <div class="solid-panel rounded-[32px] p-6 flex flex-col justify-between h-full bg-gradient-to-br from-indigo-500/10 to-transparent">
-                                <i data-lucide="cpu" class="w-6 h-6 text-indigo-400 mb-4"></i>
-                                <div>
-                                    <div class="text-[10px] font-black uppercase text-indigo-300 mb-2">Статус ядра</div>
-                                    <p class="text-[11px] text-zinc-400 leading-relaxed">Система готова к глубокой оптимизации пакетов. Нейросеть активна.</p>
-                                </div>
-                                <div class="mt-4 pt-4 border-t border-white/5 flex justify-between">
-                                    <span class="text-[9px] text-zinc-500 uppercase font-bold tracking-widest">RAM Usage</span>
-                                    <span class="text-[9px] text-white font-mono">1.2 GB</span>
-                                </div>
-                            </div>
-                        </div>
+                <div class="space-y-4 border-t border-white/5 pt-4">
+                    <div class="flex justify-between text-[11px]">
+                        <span>Прозрачность меню</span>
+                        <span class="text-indigo-400">85%</span>
                     </div>
-
-                    <!-- Grid Items -->
-                    <div class="grid grid-cols-4 gap-6" id="feature-grid"></div>
+                    <input type="range" class="w-full">
                 </div>
 
-                <!-- FPS View -->
-                <div id="view-fps" class="view hidden space-y-8 animate-in fade-in duration-300">
-                    <div class="max-w-2xl space-y-6">
-                        <div class="flex items-center gap-4 mb-2">
-                            <div class="w-10 h-10 rounded-2xl bg-indigo-500/10 flex items-center justify-center"><i data-lucide="monitor" class="w-5 h-5 text-indigo-400"></i></div>
-                            <h2 class="text-lg font-bold">Отображение кадров</h2>
-                        </div>
-                        
-                        <div class="space-y-4">
-                            <div class="solid-panel p-6 rounded-3xl flex justify-between items-center">
-                                <div>
-                                    <div class="text-sm font-bold">Включить FPS счетчик</div>
-                                    <div class="text-[11px] text-zinc-500 mt-1 uppercase">Показывает частоту кадров поверх всех окон</div>
-                                </div>
-                                <div class="switch active"></div>
-                            </div>
-                            <div class="solid-panel p-6 rounded-3xl flex justify-between items-center">
-                                <div>
-                                    <div class="text-sm font-bold">Индикатор загрузки GPU</div>
-                                    <div class="text-[11px] text-zinc-500 mt-1 uppercase">Вывод процента загрузки видеоядра</div>
-                                </div>
-                                <div class="switch"></div>
-                            </div>
-                            <div class="solid-panel p-6 rounded-3xl">
-                                <div class="text-sm font-bold mb-4">Размер шрифта</div>
-                                <input type="range" class="w-full accent-indigo-500 h-1.5 bg-white/5 rounded-full" min="8" max="24" value="12">
-                            </div>
-                        </div>
-                    </div>
+                <div class="flex justify-between items-center border-t border-white/5 pt-4">
+                    <span class="text-sm font-bold">Счетчик FPS</span>
+                    <div class="switch-ui" onclick="this.classList.toggle('active')"></div>
                 </div>
 
-                <!-- Ping View -->
-                <div id="view-ping" class="view hidden space-y-8 animate-in fade-in duration-300">
-                    <div class="max-w-2xl space-y-6">
-                        <div class="flex items-center gap-4 mb-2">
-                            <div class="w-10 h-10 rounded-2xl bg-emerald-500/10 flex items-center justify-center"><i data-lucide="activity" class="w-5 h-5 text-emerald-500"></i></div>
-                            <h2 class="text-lg font-bold">Сетевые параметры</h2>
-                        </div>
-                        
-                        <div class="solid-panel p-6 rounded-3xl space-y-6">
-                            <div class="flex justify-between items-center">
-                                <span class="text-xs font-bold uppercase tracking-widest text-zinc-400">Алгоритм оптимизации</span>
-                                <span class="text-[10px] font-black text-indigo-400 border border-indigo-400/20 px-3 py-1 rounded-lg">BBR v3 (Adaptive)</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-xs font-bold uppercase tracking-widest text-zinc-400">Выбранный DNS</span>
-                                <span class="text-[10px] font-black text-zinc-300">1.1.1.1 (Cloudflare)</span>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="solid-panel p-5 rounded-3xl">
-                                <div class="text-[9px] font-bold text-zinc-500 uppercase mb-2">Packet Loss</div>
-                                <div class="text-2xl font-mono text-white">0.00%</div>
-                            </div>
-                            <div class="solid-panel p-5 rounded-3xl">
-                                <div class="text-[9px] font-bold text-zinc-500 uppercase mb-2">Jitter</div>
-                                <div class="text-2xl font-mono text-white">1.2ms</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Appearance View -->
-                <div id="view-appearance" class="view hidden space-y-8 animate-in fade-in duration-300">
-                    <div class="max-w-2xl space-y-6">
-                        <h2 class="text-xs font-black uppercase tracking-[0.3em] text-indigo-400 mb-6">Внешний вид</h2>
-                        
-                        <div class="grid grid-cols-3 gap-4">
-                            <div class="solid-panel p-4 rounded-3xl border-indigo-500 cursor-pointer text-center">
-                                <div class="w-full h-12 bg-indigo-600/20 rounded-xl mb-3"></div>
-                                <span class="text-[10px] font-bold uppercase">Midnight</span>
-                            </div>
-                            <div class="solid-panel p-4 rounded-3xl opacity-50 cursor-pointer text-center">
-                                <div class="w-full h-12 bg-white/10 rounded-xl mb-3"></div>
-                                <span class="text-[10px] font-bold uppercase">Classic</span>
-                            </div>
-                            <div class="solid-panel p-4 rounded-3xl opacity-50 cursor-pointer text-center">
-                                <div class="w-full h-12 bg-rose-600/20 rounded-xl mb-3"></div>
-                                <span class="text-[10px] font-bold uppercase">Redline</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- General View -->
-                <div id="view-general" class="view hidden space-y-6 animate-in fade-in duration-300">
-                    <div class="max-w-xl space-y-4">
-                        <h2 class="text-xs font-black uppercase tracking-[0.3em] text-indigo-400 mb-6">Системные настройки</h2>
-                        <div class="solid-panel p-5 rounded-3xl flex justify-between items-center">
-                            <div>
-                                <div class="text-xs font-bold">Автозагрузка</div>
-                                <div class="text-[9px] text-zinc-500 uppercase mt-1">Запускать при старте Windows</div>
-                            </div>
-                            <div class="switch active"></div>
-                        </div>
-                        <div class="solid-panel p-5 rounded-3xl flex justify-between items-center">
-                            <div>
-                                <div class="text-xs font-bold">Игровой приоритет</div>
-                                <div class="text-[9px] text-zinc-500 uppercase mt-1">Автоматический приоритет High</div>
-                            </div>
-                            <div class="switch active"></div>
-                        </div>
-                        <div class="solid-panel p-5 rounded-3xl flex justify-between items-center">
-                            <div>
-                                <div class="text-xs font-bold">Очистка памяти</div>
-                                <div class="text-[9px] text-zinc-500 uppercase mt-1">При запуске тяжелых игр</div>
-                            </div>
-                            <div class="switch"></div>
-                        </div>
+                <div class="flex justify-between items-center border-t border-white/5 pt-4">
+                    <span class="text-sm font-bold">Цвет темы</span>
+                    <div class="flex gap-2">
+                        <div class="w-5 h-5 rounded-full bg-indigo-500 border-2 border-white"></div>
+                        <div class="w-5 h-5 rounded-full bg-rose-500"></div>
+                        <div class="w-5 h-5 rounded-full bg-emerald-500"></div>
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation & Button -->
+    <div class="fixed bottom-0 left-0 right-0 z-50 px-6 pb-10 pt-4 glass-nav">
+        <button id="main-opt-btn" onclick="startGlobalOptimization()" class="w-full btn-gradient h-14 rounded-2xl mb-6 text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 active:scale-95 transition-all">
+            <i data-lucide="flame" class="w-4 h-4"></i>
+            Глобальная Оптимизация
+        </button>
+
+        <nav class="flex justify-around items-center">
+            <button onclick="switchTab('home')" class="nav-btn flex flex-col items-center gap-1.5 text-indigo-500" data-tab="home">
+                <i data-lucide="home" class="w-5 h-5"></i>
+                <span class="text-[8px] font-bold uppercase">Главная</span>
+            </button>
+            <button onclick="switchTab('network')" class="nav-btn flex flex-col items-center gap-1.5 text-zinc-500" data-tab="network">
+                <i data-lucide="globe" class="w-5 h-5"></i>
+                <span class="text-[8px] font-bold uppercase">Сеть</span>
+            </button>
+            <button onclick="switchTab('game')" class="nav-btn flex flex-col items-center gap-1.5 text-zinc-500" data-tab="game">
+                <i data-lucide="swords" class="w-5 h-5"></i>
+                <span class="text-[8px] font-bold uppercase">Игры</span>
+            </button>
+            <button onclick="switchTab('visual')" class="nav-btn flex flex-col items-center gap-1.5 text-zinc-500" data-tab="visual">
+                <i data-lucide="sliders" class="w-5 h-5"></i>
+                <span class="text-[8px] font-bold uppercase">Опции</span>
+            </button>
+        </nav>
     </div>
 
     <script>
         lucide.createIcons();
-        const win = document.getElementById('app-window');
 
-        // Обработка двойного клика для разворачивания
-        function handleDblClick(e) {
-            if (win.classList.contains('collapsed')) {
-                toggleCollapse();
-            }
-        }
-
-        function toggleCollapse() {
-            const isCollapsed = win.classList.contains('collapsed');
-            if (!isCollapsed) {
-                const pos = { left: win.style.left, top: win.style.top };
-                win.dataset.oldPos = JSON.stringify(pos);
-                win.classList.add('collapsed');
-                win.style.left = "calc(50% - 40px)";
-                win.style.top = "calc(50% - 40px)";
-            } else {
-                win.classList.remove('collapsed');
-                if (win.dataset.oldPos) {
-                    const pos = JSON.parse(win.dataset.oldPos);
-                    win.style.left = pos.left;
-                    win.style.top = pos.top;
-                }
-            }
-        }
-
-        const tabTitles = {
-            main: 'Дашборд',
-            fps: 'FPS & Оверлей',
-            ping: 'Ping & Сеть',
-            appearance: 'Интерфейс',
-            general: 'Параметры'
-        };
-
+        // View Switcher
         function switchTab(tabId) {
-            document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+            document.querySelectorAll('.view-transition').forEach(v => v.classList.add('hidden'));
             document.getElementById(`view-${tabId}`).classList.remove('hidden');
             
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(`btn-${tabId}`).classList.add('active');
-            
-            document.getElementById('page-title').innerText = tabTitles[tabId];
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.replace('text-indigo-500', 'text-zinc-500');
+            });
+            document.querySelector(`[data-tab="${tabId}"]`).classList.replace('text-zinc-500', 'text-indigo-500');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Перетаскивание
-        const dragHandle = document.getElementById('header-drag');
-        let isDragging = false, offset = { x: 0, y: 0 };
+        // Global Optimization Simulation
+        function startGlobalOptimization() {
+            const btn = document.getElementById('main-opt-btn');
+            const status = document.getElementById('system-status');
+            
+            btn.disabled = true;
+            btn.innerHTML = '<i data-lucide="refresh-cw" class="w-4 h-4 animate-spin"></i> Выполняется...';
+            status.innerText = 'Система: Выполняется анализ пакетов...';
+            status.className = 'text-[8px] text-yellow-500 font-bold uppercase tracking-wider';
+            lucide.createIcons();
 
-        dragHandle.onmousedown = (e) => {
-            if(win.classList.contains('collapsed')) return;
-            isDragging = true;
-            offset = { x: e.clientX - win.offsetLeft, y: e.clientY - win.offsetTop };
-        };
+            setTimeout(() => {
+                btn.innerHTML = '<i data-lucide="check-circle-2" class="w-4 h-4"></i> Завершено';
+                btn.classList.replace('btn-gradient', 'bg-emerald-600');
+                status.innerText = 'Система: Оптимизирована на 100%';
+                status.className = 'text-[8px] text-emerald-500 font-bold uppercase tracking-wider';
+                lucide.createIcons();
 
-        window.onmousemove = (e) => {
-            if (!isDragging) return;
-            win.style.left = (e.clientX - offset.x) + 'px';
-            win.style.top = (e.clientY - offset.y) + 'px';
-        };
-        window.onmouseup = () => isDragging = false;
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i data-lucide="flame" class="w-4 h-4"></i> Глобальная Оптимизация';
+                    btn.classList.replace('bg-emerald-600', 'btn-gradient');
+                    lucide.createIcons();
+                }, 3000);
+            }, 3500);
+        }
 
-        // Chart
-        const ctx = document.getElementById('pingChart').getContext('2d');
-        const pingChart = new Chart(ctx, {
+        // Chart Data
+        const ctx = document.getElementById('mainChart').getContext('2d');
+        const mainChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: Array(30).fill(''),
+                labels: Array(25).fill(''),
                 datasets: [{
-                    data: Array(30).fill(24),
+                    data: Array(25).fill(24),
                     borderColor: '#6366f1',
                     borderWidth: 3,
                     pointRadius: 0,
                     tension: 0.45,
                     fill: true,
-                    backgroundColor: (context) => {
-                        const gradient = context.chart.ctx.createLinearGradient(0, 0, 0, 150);
-                        gradient.addColorStop(0, 'rgba(99, 102, 241, 0.2)');
-                        gradient.addColorStop(1, 'transparent');
-                        return gradient;
+                    backgroundColor: (c) => {
+                        const g = c.chart.ctx.createLinearGradient(0, 0, 0, 100);
+                        g.addColorStop(0, 'rgba(99, 102, 241, 0.2)');
+                        g.addColorStop(1, 'transparent');
+                        return g;
                     }
                 }]
             },
             options: {
                 maintainAspectRatio: false,
-                scales: { y: { display: false, min: 0, max: 100 }, x: { display: false } },
+                scales: { y: { display: false, min: 10, max: 60 }, x: { display: false } },
                 plugins: { legend: { display: false } },
-                animation: { duration: 400 }
+                animation: { duration: 0 }
             }
         });
 
+        // Real-time Update simulation
         setInterval(() => {
-            const val = 18 + Math.floor(Math.random() * 10);
-            const pingEl = document.getElementById('ping-val');
-            if (pingEl) pingEl.innerText = val;
-            pingChart.data.datasets[0].data.push(val);
-            pingChart.data.datasets[0].data.shift();
-            pingChart.update('none');
-        }, 800);
+            const p = 18 + Math.floor(Math.random() * 10);
+            document.getElementById('top-ping').innerText = p + 'ms';
+            mainChart.data.datasets[0].data.push(p);
+            mainChart.data.datasets[0].data.shift();
+            mainChart.update('none');
+        }, 1200);
 
-        // Feature Grid Data
-        const features = [
-            { label: 'Neural DNS', icon: 'globe' },
-            { label: 'Packet Flow', icon: 'zap' },
-            { label: 'IP Mask', icon: 'shield' },
-            { label: 'Anti-Lag', icon: 'cpu' }
-        ];
-
-        const grid = document.getElementById('feature-grid');
-        features.forEach(f => {
-            grid.innerHTML += `
-                <div class="feature-card solid-panel p-6 rounded-[24px] flex flex-col gap-4 opacity-80 hover:opacity-100 transform hover:-translate-y-1 transition-all">
-                    <div class="icon-box w-10 h-10 rounded-2xl bg-white/5 flex items-center justify-center">
-                        <i data-lucide="${f.icon}" class="w-5 h-5 text-zinc-400"></i>
-                    </div>
-                    <div>
-                        <span class="text-[10px] font-black uppercase tracking-widest block">${f.label}</span>
-                        <span class="status-text text-[8px] text-zinc-500 uppercase mt-1 font-bold">Waiting...</span>
-                    </div>
-                </div>
-            `;
-        });
-        lucide.createIcons();
-
-        document.querySelectorAll('.switch').forEach(s => {
-            s.onclick = () => s.classList.toggle('active');
-        });
-
-        function startOptimization() {
-            const btn = document.getElementById('opt-btn');
-            btn.disabled = true;
-            btn.innerHTML = '<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Обработка...';
-            lucide.createIcons();
-            
-            setTimeout(() => {
-                btn.disabled = false;
-                btn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i> Готово';
-                btn.classList.replace('bg-indigo-600', 'bg-emerald-600');
-                lucide.createIcons();
-                
-                // Фикс ошибки: используем корректные классы для поиска
-                document.querySelectorAll('.feature-card').forEach(card => {
-                    card.classList.add('border-indigo-500/40');
-                    
-                    const statusText = card.querySelector('.status-text');
-                    if (statusText) {
-                        statusText.innerText = 'Active';
-                        statusText.className = 'status-text text-[8px] text-emerald-500 uppercase mt-1 font-bold';
-                    }
-                    
-                    const icon = card.querySelector('i');
-                    if (icon) {
-                        icon.className = 'w-5 h-5 text-indigo-400';
-                    }
-                });
-            }, 2500);
-        }
     </script>
 </body>
 </html>
