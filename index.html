@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>NetOpt Hyper OS | Telegram Mini App</title>
+    <title>NetOpt Hyper OS | TMA Optimized</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -14,20 +14,18 @@
         :root {
             --brand: #6366f1;
             --bg: #030712;
-            --card: rgba(15, 23, 42, 0.6);
+            --card: rgba(15, 23, 42, 0.7);
             --text: #f8fafc;
-            --text-dim: #94a3b8;
-            --border: rgba(255, 255, 255, 0.08);
-            --radius: 28px;
+            --border: rgba(255, 255, 255, 0.06);
+            --radius: 20px;
             --font-main: 'Plus Jakarta Sans', sans-serif;
-            --glass-blur: 20px;
+            --glass-blur: 16px;
         }
 
         .light {
-            --bg: #f1f5f9;
-            --card: rgba(255, 255, 255, 0.6);
+            --bg: #f8fafc;
+            --card: rgba(255, 255, 255, 0.7);
             --text: #0f172a;
-            --text-dim: #64748b;
             --border: rgba(0, 0, 0, 0.05);
         }
 
@@ -40,7 +38,6 @@
             overflow: hidden;
             width: 100vw;
             height: 100vh;
-            /* Запрет системных жестов в некоторых браузерах */
             touch-action: manipulation;
         }
 
@@ -50,20 +47,20 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            background: radial-gradient(circle at 50% -10%, var(--brand), transparent 400px), var(--bg);
+            background: radial-gradient(circle at 50% -15%, var(--brand), transparent 300px), var(--bg);
         }
 
-        /* Адаптация под 1080x2436 */
-        .safe-top { height: env(safe-area-inset-top, 44px); }
-        .safe-bottom { height: env(safe-area-inset-bottom, 34px); }
+        /* Safe Areas */
+        .safe-top { height: env(safe-area-inset-top, 20px); }
+        .safe-bottom { height: env(safe-area-inset-bottom, 20px); }
 
-        /* 3D Scene Wrapper - Оптимизация под высоту 2436 */
+        /* Compact 3D Scene */
         .canvas-container {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 60vh; /* Занимает 60% высоты экрана */
+            height: 45vh; /* Уменьшено с 60vh для лучшего вида */
             z-index: 1;
             overflow: hidden;
             mix-blend-mode: screen;
@@ -71,20 +68,20 @@
 
         .spline-wrapper {
             width: 100%;
-            height: calc(100% + 120px); /* Увеличиваем высоту для скрытия логотипа Spline */
+            height: calc(100% + 150px); /* Смещение для скрытия водяного знака */
             position: absolute;
-            top: 0;
+            top: -50px; /* Немного приподнимаем сферу */
         }
 
         iframe {
             width: 100%;
             height: 100%;
             border: none;
-            mask-image: linear-gradient(to bottom, black 80%, transparent 98%);
-            -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 98%);
+            mask-image: linear-gradient(to bottom, black 70%, transparent 95%);
+            -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 95%);
         }
 
-        /* Стек контента поверх 3D */
+        /* UI Layer */
         .ui-layer {
             position: relative;
             z-index: 10;
@@ -94,8 +91,8 @@
         }
 
         .header {
-            padding: 0 24px;
-            height: 80px;
+            padding: 0 20px;
+            height: 60px; /* Уменьшенная высота шапки */
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -104,9 +101,9 @@
         .content-scrollable {
             flex: 1;
             overflow-y: auto;
-            padding: 0 20px;
-            margin-top: 35vh; /* Отступ чтобы видеть 3D объект */
-            padding-bottom: 120px; /* Запас под навигацию */
+            padding: 0 16px;
+            margin-top: 32vh; /* Уменьшенный отступ для контента */
+            padding-bottom: 100px;
             scrollbar-width: none;
         }
         .content-scrollable::-webkit-scrollbar { display: none; }
@@ -119,17 +116,17 @@
             border-radius: var(--radius);
         }
 
-        /* Навигация Telegram Style */
+        /* Compact Bottom Nav */
         .bottom-nav {
             position: absolute;
-            bottom: calc(20px + env(safe-area-inset-bottom, 0px));
-            left: 20px;
-            right: 20px;
-            height: 80px;
+            bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+            left: 16px;
+            right: 16px;
+            height: 64px; /* Уменьшено для компактности */
             display: flex;
             align-items: center;
             justify-content: space-around;
-            padding: 0 10px;
+            padding: 0 8px;
             z-index: 100;
         }
 
@@ -139,7 +136,7 @@
             align-items: center;
             justify-content: center;
             flex: 1;
-            gap: 6px;
+            gap: 4px;
             opacity: 0.4;
             transition: 0.3s;
             color: var(--text);
@@ -148,34 +145,39 @@
             opacity: 1;
             color: var(--brand);
         }
-        .nav-btn span { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+        .nav-btn span { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
 
+        /* Smaller Action Button */
         .action-button {
             background: var(--brand);
             color: white;
             width: 100%;
-            padding: 20px;
-            border-radius: 24px;
-            font-weight: 900;
-            font-size: 14px;
+            padding: 14px;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: 13px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 15px 30px -10px rgba(99, 102, 241, 0.5);
-            active:scale-95;
+            letter-spacing: 0.5px;
+            box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
             transition: 0.2s;
         }
+        .action-button:active { transform: scale(0.98); }
 
-        .tab-panel { display: none; animation: fadeIn 0.4s ease; }
+        .tab-panel { display: none; animation: slideUp 0.3s ease-out; }
         .tab-panel.active { display: block; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Hide scrollbar for logs */
-        #log-container { scrollbar-width: none; }
-        #log-container::-webkit-scrollbar { display: none; }
+        /* Stats adjustments */
+        .stat-card {
+            padding: 12px;
+            text-align: center;
+        }
+        .stat-value { font-size: 1.25rem; font-weight: 900; }
+        .stat-label { font-size: 9px; color: #94a3b8; text-transform: uppercase; font-weight: 800; margin-bottom: 2px; }
     </style>
 </head>
 <body class="dark">
@@ -183,7 +185,7 @@
     <div class="app-container">
         <div class="safe-top"></div>
 
-        <!-- 3D Background Layer -->
+        <!-- Compact 3D Layer -->
         <div class="canvas-container">
             <div class="spline-wrapper">
                 <iframe src="https://my.spline.design/portfoliolandingpage-EpOmkvztOu0dRNL50lnkCKBv/" frameborder="0"></iframe>
@@ -194,112 +196,113 @@
         <div class="ui-layer">
             <header class="header">
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-2xl glass p-1 overflow-hidden">
-                        <img src="https://i.pinimg.com/736x/55/1f/87/551f875a705c1704d90a94610e2d3dcf.jpg" class="w-full h-full object-cover rounded-xl" alt="Ava">
+                    <div class="w-10 h-10 rounded-xl glass p-0.5 overflow-hidden">
+                        <img src="https://i.pinimg.com/736x/55/1f/87/551f875a705c1704d90a94610e2d3dcf.jpg" class="w-full h-full object-cover rounded-lg" alt="Avatar">
                     </div>
                     <div>
-                        <h1 class="text-lg font-black tracking-tighter leading-tight">Net<span class="text-indigo-500">Opt</span></h1>
-                        <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Hyperion OS v4.0</p>
+                        <h1 class="text-sm font-black tracking-tight leading-none">Net<span class="text-indigo-500">Opt</span></h1>
+                        <p class="text-[7px] font-bold text-slate-500 uppercase tracking-widest">Mini Engine v4.1</p>
                     </div>
                 </div>
-                <button onclick="toggleTheme()" class="w-12 h-12 glass flex items-center justify-center">
-                    <i id="theme-icon" data-lucide="moon" class="w-5 h-5 text-indigo-400"></i>
+                <button onclick="toggleTheme()" class="w-10 h-10 glass flex items-center justify-center">
+                    <i id="theme-icon" data-lucide="moon" class="w-4 h-4 text-indigo-400"></i>
                 </button>
             </header>
 
             <main class="content-scrollable">
                 
                 <!-- HOME PANEL -->
-                <div id="tab-home" class="tab-panel active space-y-6">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="glass p-6 text-center">
-                            <p class="text-[10px] font-black text-slate-500 uppercase mb-2">Отклик</p>
-                            <p class="text-2xl font-black italic">1.2ms</p>
+                <div id="tab-home" class="tab-panel active space-y-4">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="glass stat-card">
+                            <p class="stat-label">Отклик</p>
+                            <p class="stat-value italic">1.2<span class="text-[10px] ml-0.5 opacity-50">ms</span></p>
                         </div>
-                        <div class="glass p-6 text-center">
-                            <p class="text-[10px] font-black text-slate-500 uppercase mb-2">Стабильность</p>
-                            <p class="text-2xl font-black text-indigo-500">99%</p>
+                        <div class="glass stat-card">
+                            <p class="stat-label">Стабильность</p>
+                            <p class="stat-value text-indigo-500">99<span class="text-[10px] ml-0.5">%</span></p>
                         </div>
                     </div>
 
-                    <div class="glass p-8 space-y-6">
+                    <div class="glass p-5 space-y-4">
                         <div class="text-center">
-                            <h2 class="text-xl font-black italic">OPTIMIZATION CORE</h2>
-                            <p class="text-[11px] text-slate-500 font-medium mt-1">Интеллектуальный контроль ресурсов</p>
+                            <h2 class="text-sm font-black italic uppercase tracking-wider">Optimization Core</h2>
+                            <p class="text-[9px] text-slate-500 font-medium mt-0.5">Контроль ресурсов системы</p>
                         </div>
                         <button onclick="startOpt()" id="main-act" class="action-button">
-                            Ускорить Систему
+                            Ускорить
                         </button>
                     </div>
 
-                    <div class="glass p-5 flex items-center justify-between">
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400">
-                                <i data-lucide="cpu" class="w-5 h-5"></i>
+                    <div class="glass p-3.5 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-400">
+                                <i data-lucide="cpu" class="w-4 h-4"></i>
                             </div>
                             <div>
-                                <p class="text-xs font-black">AI Процессор</p>
-                                <p class="text-[10px] font-bold text-slate-500 uppercase">Активен</p>
+                                <p class="text-[11px] font-black">AI Процессор</p>
+                                <p class="text-[8px] font-bold text-slate-500 uppercase">Активен</p>
                             </div>
                         </div>
-                        <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                        <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
                     </div>
                 </div>
 
                 <!-- NET PANEL -->
-                <div id="tab-net" class="tab-panel space-y-4">
-                    <h3 class="text-xl font-black ml-2 mb-4 italic">NETWORK ANALYSER</h3>
-                    <div class="glass p-5 flex items-center justify-between group active:bg-white/5">
-                        <div class="flex items-center gap-4">
-                            <i data-lucide="wifi" class="text-indigo-500"></i>
-                            <span class="font-bold">5G Протоколы</span>
+                <div id="tab-net" class="tab-panel space-y-3">
+                    <h3 class="text-sm font-black ml-1 italic opacity-50 uppercase tracking-widest">Network</h3>
+                    <div class="glass p-4 flex items-center justify-between active:bg-white/5 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="wifi" class="w-4 h-4 text-indigo-500"></i>
+                            <span class="font-bold text-xs">5G Протоколы</span>
                         </div>
-                        <i data-lucide="chevron-right" class="opacity-20"></i>
+                        <i data-lucide="chevron-right" class="w-3 h-3 opacity-20"></i>
                     </div>
                 </div>
 
                 <!-- STYLE PANEL -->
-                <div id="tab-style" class="tab-panel space-y-6">
-                    <h3 class="text-xl font-black ml-2 mb-4 italic">APPEARANCE</h3>
-                    <div class="glass p-6 space-y-6">
-                        <p class="text-[10px] font-black text-slate-500 uppercase">Цветовая схема</p>
+                <div id="tab-style" class="tab-panel space-y-4">
+                    <h3 class="text-sm font-black ml-1 italic opacity-50 uppercase tracking-widest">Appearance</h3>
+                    <div class="glass p-5 space-y-4">
+                        <p class="text-[9px] font-black text-slate-500 uppercase tracking-wider">Цветовой акцент</p>
                         <div class="flex justify-between items-center" id="color-grid">
-                            <div onclick="setAccent('#6366f1', this)" class="w-14 h-14 rounded-2xl bg-indigo-500 border-4 border-indigo-500/20 ring-4 ring-transparent transition-all"></div>
-                            <div onclick="setAccent('#f43f5e', this)" class="w-14 h-14 rounded-2xl bg-rose-500 transition-all"></div>
-                            <div onclick="setAccent('#10b981', this)" class="w-14 h-14 rounded-2xl bg-emerald-500 transition-all"></div>
-                            <div onclick="setAccent('#0ea5e9', this)" class="w-14 h-14 rounded-2xl bg-sky-500 transition-all"></div>
+                            <div onclick="setAccent('#6366f1', this)" class="w-10 h-10 rounded-xl bg-indigo-500 border-2 border-indigo-500/20 transition-all"></div>
+                            <div onclick="setAccent('#f43f5e', this)" class="w-10 h-10 rounded-xl bg-rose-500 transition-all"></div>
+                            <div onclick="setAccent('#10b981', this)" class="w-10 h-10 rounded-xl bg-emerald-500 transition-all"></div>
+                            <div onclick="setAccent('#0ea5e9', this)" class="w-10 h-10 rounded-xl bg-sky-500 transition-all"></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- LOGS PANEL -->
-                <div id="tab-logs" class="tab-panel space-y-4">
-                    <div class="flex justify-between items-end px-2">
-                        <h3 class="text-xl font-black italic">SYSTEM LOGS</h3>
-                        <button onclick="clearLogs()" class="text-[10px] font-black text-rose-500 uppercase">Очистить</button>
+                <div id="tab-logs" class="tab-panel space-y-3">
+                    <div class="flex justify-between items-end px-1">
+                        <h3 class="text-sm font-black italic opacity-50 uppercase tracking-widest">Logs</h3>
+                        <button onclick="clearLogs()" class="text-[8px] font-black text-rose-500 uppercase">Сброс</button>
                     </div>
-                    <div id="log-container" class="glass h-[40vh] p-4 font-mono text-[10px] overflow-y-auto space-y-2">
+                    <div id="log-container" class="glass h-[35vh] p-3 font-mono text-[9px] overflow-y-auto space-y-1.5">
                         <!-- Logs here -->
                     </div>
                 </div>
 
             </main>
 
+            <!-- Compact Navigation -->
             <nav class="bottom-nav glass">
                 <button class="nav-btn active" onclick="nav('home', this)">
-                    <i data-lucide="layout-grid" class="w-6 h-6"></i>
-                    <span>Обзор</span>
+                    <i data-lucide="layout-grid" class="w-5 h-5"></i>
+                    <span>Главная</span>
                 </button>
                 <button class="nav-btn" onclick="nav('net', this)">
-                    <i data-lucide="activity" class="w-6 h-6"></i>
+                    <i data-lucide="activity" class="w-5 h-5"></i>
                     <span>Сеть</span>
                 </button>
                 <button class="nav-btn" onclick="nav('style', this)">
-                    <i data-lucide="palette" class="w-6 h-6"></i>
+                    <i data-lucide="palette" class="w-5 h-5"></i>
                     <span>Стиль</span>
                 </button>
                 <button class="nav-btn" onclick="nav('logs', this)">
-                    <i data-lucide="terminal" class="w-6 h-6"></i>
+                    <i data-lucide="terminal" class="w-5 h-5"></i>
                     <span>Логи</span>
                 </button>
             </nav>
@@ -309,12 +312,10 @@
     </div>
 
     <script>
-        // TG WebApp Init
         const tg = window.Telegram?.WebApp;
         if (tg) {
             tg.expand();
             tg.ready();
-            tg.enableClosingConfirmation();
         }
 
         function toggleTheme() {
@@ -324,10 +325,9 @@
             icon.setAttribute('data-lucide', isLight ? 'sun' : 'moon');
             lucide.createIcons();
             
-            // Sync with TG header
             if (tg) {
-                tg.setHeaderColor(isLight ? '#f1f5f9' : '#030712');
-                tg.setBackgroundColor(isLight ? '#f1f5f9' : '#030712');
+                tg.setHeaderColor(isLight ? '#f8fafc' : '#030712');
+                tg.setBackgroundColor(isLight ? '#f8fafc' : '#030712');
             }
         }
 
@@ -345,41 +345,42 @@
             document.documentElement.style.setProperty('--brand', color);
             document.querySelectorAll('#color-grid div').forEach(d => {
                 d.style.borderColor = 'transparent';
-                d.style.ringColor = 'transparent';
+                d.style.transform = 'scale(1)';
             });
-            el.style.borderColor = color + '44';
-            addLog(`Accent color changed to ${color}`);
-            if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+            el.style.borderColor = color;
+            el.style.transform = 'scale(1.1)';
+            addLog(`Accent: ${color}`);
+            if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
         }
 
         function addLog(msg) {
             const container = document.getElementById('log-container');
             if (!container) return;
             const div = document.createElement('div');
-            const time = new Date().toLocaleTimeString();
-            div.innerHTML = `<span class="text-indigo-500">[${time}]</span> <span class="opacity-60">${msg}</span>`;
+            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+            div.innerHTML = `<span class="text-indigo-500 font-bold">[${time}]</span> <span class="opacity-60">${msg}</span>`;
             container.prepend(div);
         }
 
         function startOpt() {
             const btn = document.getElementById('main-act');
             btn.disabled = true;
-            btn.innerText = "Идет процесс...";
-            addLog("Initializing neural core optimization...");
+            btn.innerText = "Идет разгон...";
+            addLog("Syncing kernel freq...");
             
             if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
 
             setTimeout(() => {
-                addLog("System frequency synchronized.");
+                addLog("Neural link established.");
                 setTimeout(() => {
-                    addLog("Optimization complete. +40% Speed.");
-                    btn.innerText = "Успешно!";
+                    addLog("Optimization OK. Boost +42%");
+                    btn.innerText = "Готово!";
                     setTimeout(() => {
                         btn.disabled = false;
-                        btn.innerText = "Ускорить Систему";
-                    }, 2000);
-                }, 1000);
-            }, 1000);
+                        btn.innerText = "Ускорить";
+                    }, 1500);
+                }, 800);
+            }, 800);
         }
 
         function clearLogs() {
@@ -388,8 +389,7 @@
 
         window.onload = () => {
             lucide.createIcons();
-            addLog("Hyperion Kernel v4.0.2 Loaded");
-            addLog("Telegram Mini App Interface Active");
+            addLog("Hyperion Kernel TMA v4.1 Active");
         };
     </script>
 </body>
